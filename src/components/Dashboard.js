@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import { Card, Button, Alert } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import { useAuth } from "../contexts/AuthContext";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Userfeed from "./Feed";
 
 export default function Dashboard() {

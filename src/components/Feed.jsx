@@ -1,23 +1,42 @@
 import React from "react";
 
-
+import cardData from "../data/data";
 import { Box, Button, Card, CardActions, CardContent, Typography } from "@material-ui/core";
 import "./FeedStyles.css"
 import { useEffect,useState } from "react";
 import { db } from "../firebase";
 import {collection, getDocs, updateDoc, doc} from "@firebase/firestore"
-  
+import Comments from "./Comments"
+// import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+// import ShareIcon from '@mui/icons-material/Share';
+
 const Userfeed = () => {
 
-    const [like,setLike] = useState([69])
+    const [like,setLike] = useState([])
+    const [share,setShare] = useState([])
+    const [views,setViews] = useState([])
+
+    const [lock, setLock] = useState(false)
     const likesCollectionRef = collection(db, "likes")
+    const sharesCollectionRef = collection(db, "shares")
+    const viewsCollectionRef = collection(db, "views") 
     useEffect(()=>{
 
         const getLikes = async () => {
             const data = await getDocs(likesCollectionRef)
             setLike(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
         }
+        const getShares = async () => {
+            const data = await getDocs(sharesCollectionRef)
+            setShare(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+        }
+        const getViews = async () => {
+            const data = await getDocs(viewsCollectionRef)
+            setViews(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
+        }
         getLikes()
+        getViews()
+        getShares()
     },[])
 
     // like button
@@ -30,47 +49,45 @@ const Userfeed = () => {
             currentLikes = like.likeNumber;
           })
           updateLikes(Id, currentLikes)
-
     }
 
     const updateLikes = async (id,currLikes) => {
         const likesDoc = doc(db, "likes", id)
-        const newFields = {likeNumber: currLikes+1}
+        const newFields = {likeNumber: lock?currLikes:currLikes+1}
+        setLock(true)
         await updateDoc(likesDoc, newFields)
     }
   return (
-    <Box sx={{ minWidth: 475 }} className="feedBox">
+    <Box sx={{ minWidth: "775px" }} className="feedBox">
       <Card variant="outlined" className="feedCard">
         <div className="hero">
             <img src="https://avatars.githubusercontent.com/u/54280958?v=4" alt="profile pic will be displayed here" />
             <div className="heroContent">
-                <p>Krishna Chaitanya</p>
-                <p>Alum | Finance, MBA | 2016 | Business Manager</p>
-                <p>1d | San Fransisco</p>
+                <h6>{cardData.name}</h6>
+                <h6>{cardData.position} </h6>
+                <h6>{cardData.slogan}</h6>
             </div>
         </div>
         <CardContent>
           <Typography sx={{ fontSize: 6 }} color="text.secondary" gutterBottom>
-            The concept of Research : A cross-cultural study
+            {cardData.study}
           </Typography>
           <Typography sx={{ mb: 1.5 }} color="text.secondary">
-            adjective
-          </Typography>
-          <Typography variant="body2">
-            well meaning and kindly.
-            <br />
-            {'"a benevolent smile"'}
+          {cardData.description}
           </Typography>
         </CardContent>
-        <CardActions>
-          <Button size="small" onClick={() => {likeButton()}}>Like {like.map((like) => {
+        <div className="displayNumber">
+            <span>{like.map((like) => {
             return(
                 <div>
-                    <h1>{like.likeNumber}</h1>
+                    <h6>{like.likeNumber}</h6>
                 </div>
             )
-          })}</Button>
-          <Button size="small">Comment</Button>
+          })}</span>
+        </div>
+        <CardActions>
+          <Button size="small" onClick={() => {likeButton()}}>Like</Button>
+           <Button size="small"><Comments/></Button>
           <Button size="small">Share</Button>          
         </CardActions>
       </Card>
