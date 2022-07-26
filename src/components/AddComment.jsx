@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useStyles } from './Style';
-// import { database } from '../../firebase/firebase';
 import {Button,CardActions,TextField} from "@material-ui/core";
 import { addDoc } from 'firebase/firestore';
 function AddComments({currUser, commentsCollectionRef}) {

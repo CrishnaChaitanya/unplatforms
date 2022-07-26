@@ -4,8 +4,8 @@ import AddComments from "./AddComment"
 import { useAuth } from "../contexts/AuthContext"
 import { useEffect } from 'react';
 import { db } from "../firebase";
-import {collection, getDocs, updateDoc, doc} from "@firebase/firestore"
-// import MessageIcon from '@mui/icons-material/Message';
+import {collection, getDocs} from "@firebase/firestore"
+
 
 export default function Comments() {
     const [comments,setComments] = useState(["loading"])
@@ -13,7 +13,6 @@ export default function Comments() {
   const { currentUser } = useAuth()
   const commentsCollectionRef = collection(db, "comments")
   const handleClickOpen = () => {
-    console.log(currentUser);
     setOpen(true);
   };
 
@@ -32,7 +31,7 @@ export default function Comments() {
   return (
     <div>
       <Button variant="outlined" onClick={handleClickOpen}>
-        Comment
+        Comment {comments.length}
       </Button>
       <Dialog
         open={open}

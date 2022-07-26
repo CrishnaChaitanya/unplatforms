@@ -7,43 +7,27 @@ import { useEffect,useState } from "react";
 import { db } from "../firebase";
 import {collection, getDocs, updateDoc, doc} from "@firebase/firestore"
 import Comments from "./Comments"
-// import ThumbUpIcon from '@mui/icons-material/ThumbUp';
-// import ShareIcon from '@mui/icons-material/Share';
 
 const Userfeed = () => {
 
     const [like,setLike] = useState([])
-    const [share,setShare] = useState([])
-    const [views,setViews] = useState([])
-
     const [lock, setLock] = useState(false)
     const likesCollectionRef = collection(db, "likes")
-    const sharesCollectionRef = collection(db, "shares")
-    const viewsCollectionRef = collection(db, "views") 
     useEffect(()=>{
 
         const getLikes = async () => {
             const data = await getDocs(likesCollectionRef)
             setLike(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
         }
-        const getShares = async () => {
-            const data = await getDocs(sharesCollectionRef)
-            setShare(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
-        }
-        const getViews = async () => {
-            const data = await getDocs(viewsCollectionRef)
-            setViews(data.docs.map((doc) => ({...doc.data(), id: doc.id})))
-        }
+     
         getLikes()
-        getViews()
-        getShares()
-    },[])
+        
+    },[like])
 
     // like button
     const likeButton =  () => {
         let Id;
         let currentLikes;
-        console.log("like logic will be written here ");
         like.map((like) => {
             Id = like.id;
             currentLikes = like.likeNumber;
@@ -76,17 +60,14 @@ const Userfeed = () => {
           {cardData.description}
           </Typography>
         </CardContent>
-        <div className="displayNumber">
-            <span>{like.map((like) => {
-            return(
-                <div>
-                    <h6>{like.likeNumber}</h6>
-                </div>
-            )
-          })}</span>
-        </div>
         <CardActions>
-          <Button size="small" onClick={() => {likeButton()}}>Like</Button>
+          <Button size="small" onClick={() => {likeButton()}}><b>Like</b> - {like.map((like) => {
+            return(
+               
+                    <span>{like.likeNumber}</span>
+                
+            )
+          })}</Button>
            <Button size="small"><Comments/></Button>
           <Button size="small">Share</Button>          
         </CardActions>

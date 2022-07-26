@@ -33,6 +33,11 @@ export default function Signup() {
 
   return (
     <>
+      <img
+        src="https://photos.angel.co/startups/i/8649317-5e41decadb941b1e9a4b92d22e7bfa37-medium_jpg.jpg?buster=1640623815"
+        alt="logo should be dsplayed here"
+        style={{ alignSelf: "center" }}
+      />
       <Card>
         <Card.Body>
           <h2 className="text-center mb-4">Sign Up</h2>
